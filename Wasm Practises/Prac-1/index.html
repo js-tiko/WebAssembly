@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebAssembly Calculator Practice</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #e0e5ec;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        
+        .container {
+            background: #e0e5ec;
+            border-radius: 20px;
+            box-shadow: 8px 8px 15px #a3b1c6, -8px -8px 15px #ffffff;
+            padding: 2rem;
+            width: 300px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 1rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #555;
+        }
+
+        input, select, button {
+            background: #e0e5ec;
+            border: none;
+            border-radius: 10px;
+            box-shadow: inset 4px 4px 8px #a3b1c6, inset -4px -4px 8px #ffffff;
+            padding: 0.5rem;
+            width: 100%;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+
+        button {
+            background: #f1f5f9;
+            color: #333;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s ease;
+        }
+
+        button:hover {
+            background: #d1d9e6;
+        }
+
+        button:active {
+            background: #b0b9c6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>WebAssembly Calculator Practice</h1>
+        <label for="num1">Number 1:</label>
+        <input type="number" id="num1">
+        
+        <label for="num2">Number 2:</label>
+        <input type="number" id="num2">
+        
+        <label for="operation">Operation:</label>
+        <select id="operation">
+            <option value="add">Add</option>
+            <option value="subtract">Subtract</option>
+            <option value="multiply">Multiply</option>
+            <option value="divide">Divide</option>
+        </select>
+        
+        <button onclick="performCalculation()">Calculate</button>
+    </div>
+
+    <script src="operations.js"></script>
+    <script>
+        // Load WebAssembly functions
+        var add, subtract, multiply, divide;
+
+        Module.onRuntimeInitialized = function() {
+            add = Module.cwrap('add', 'number', ['number', 'number']);
+            subtract = Module.cwrap('subtract', 'number', ['number', 'number']);
+            multiply = Module.cwrap('multiply', 'number', ['number', 'number']);
+            divide = Module.cwrap('divide', 'number', ['number', 'number']);
+        };
+
+        // Perform the calculation based on the user input
+        function performCalculation() {
+            const num1 = parseInt(document.getElementById("num1").value);
+            const num2 = parseInt(document.getElementById("num2").value);
+            const operation = document.getElementById("operation").value;
+
+            let result;
+            if (operation === "add") {
+                result = add(num1, num2);
+            } else if (operation === "subtract") {
+                result = subtract(num1, num2);
+            } else if (operation === "multiply") {
+                result = multiply(num1, num2);
+            } else if (operation === "divide") {
+                result = divide(num1, num2);
+            }
+
+            console.log("Result: " + result);
+        }
+    </script>
+</body>
+</html>
